@@ -7,14 +7,16 @@ public class Player : MonoBehaviour
 
     Animator ani; //애니메이터를 가져올 변수
 
-    public GameObject bullet;  //총알 추후 4개 배열로 만들예정
+    public GameObject[] bullet;  //총알 추후 4개 배열로 만들예정
     public Transform pos = null;
 
-   
-
+    public int power = 0;
+    [SerializeField]
+    private GameObject powerup;
     
 
-    
+    public GameObject Lazer;
+    public float gValue = 0;
 
 
     void Start()
@@ -55,14 +57,33 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             //프리팹 위치 방향 넣고 생성
-            Instantiate(bullet, pos.position, Quaternion.identity);
+            Instantiate(bullet[power], pos.position, Quaternion.identity);
+        }
+        else if(Input.GetKey(KeyCode.Space))
+        {
+            gValue += Time.deltaTime;
+
+            if(gValue >=1)
+            {
+                GameObject go = Instantiate(Lazer, pos.position, Quaternion.identity);
+                Destroy(go, 3);
+                gValue = 0;
+            }
+        }
+        else
+        {
+            gValue -= Time.deltaTime;
+
+            if(gValue <=0)
+            {
+                gValue = 0;
+            }
         }
 
 
 
 
-
-        transform.Translate(moveX, moveY, 0);
+            transform.Translate(moveX, moveY, 0);
 
 
 
@@ -77,4 +98,28 @@ public class Player : MonoBehaviour
 
 
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Item"))
+        {
+            power += 1;
+
+            if (power >3)
+                power =3;
+            else
+            {
+                //파워업
+                GameObject go = Instantiate(powerup, transform.position, Quaternion.identity);
+                Destroy(go, 1);
+            }
+
+
+            //아이템 먹은 처리
+            Destroy(collision.gameObject);
+        }
+    }
+
+
+
 }
