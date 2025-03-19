@@ -79,11 +79,25 @@ public class Spawn : MonoBehaviour
         swi2 = false;
         StopCoroutine("RandomSpawn2");
         textBossWarning.SetActive(true);
+        StartCoroutine("Shake");
         //º¸½º
         Vector3 pos = new Vector3(0, 2.97f, 0);
-        GameObject go = Instantiate(Boss, pos, Quaternion.identity);
-
+        //GameObject go = Instantiate(Boss, pos, Quaternion.identity);
+        Instantiate(Boss, pos, Quaternion.identity);
 
 
     }
+
+    IEnumerator Shake()
+    {
+        yield return new WaitForSeconds(0.2f);
+        CameraShake.instance.CameraShakeShow();
+        yield return new WaitForSeconds(0.2f);
+        CameraShake.instance.CameraShakeShow();
+        yield return new WaitForSeconds(0.2f);
+        CameraShake.instance.CameraShakeShow();
+
+
+    }
+
 }
